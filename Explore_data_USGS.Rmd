@@ -1,0 +1,34 @@
+---
+title: "Explore Data"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+library(sf)
+
+df_raw<-read.csv(here("data","usgs_GIS.csv"))
+df_raw
+
+
+```
+
+```{r}
+sf_data<-st_as_sf(df_raw,coords=c("lon","lat"),crs=4326)
+
+# Plot the station_id as points using ggplot2
+ggplot(sf_data) +
+    geom_sf(data = streams, color = "blue", size = 0.5, alpha = 0.7) +
+  geom_sf(aes(color = sta_id)) +
+  labs(title = "Station Locations", x = "lon", y = "lat") +
+  theme_minimal()
+```
+
+```{r}
+# Load the stream shapefile
+stream_shapefile_path <- here("data/Flowline_PN17_NSI/Flowline_PN17_NSI.shp")
+streams <- st_read(stream_shapefile_path)
+```
+
